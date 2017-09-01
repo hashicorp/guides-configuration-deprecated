@@ -45,11 +45,15 @@ packer_build () {
   if [[ ${CONSUL_VERSION} == *"ent"* ]]; then
     export CONSUL_VERSION_STRIPPED=${CONSUL_VERSION/"+ent"/}
     export CONSUL_ENT_URL=$(AWS_SECRET_ACCESS_KEY=$(echo $AWS_SECRET_ACCESS_KEY_BINARY | base64 -d | gpg -d -) AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID_BINARY} aws s3 presign --region="us-east-1" s3://${S3BUCKET}/consul-enterprise/${CONSUL_VERSION_STRIPPED}/consul-enterprise_${CONSUL_VERSION}_linux_amd64.zip --expires-in 3600)
+    echo "CONSUL_VERSION_STRIPPED: ${CONSUL_VERSION_STRIPPED}"
+    echo "CONSUL_ENT_URL: ${CONSUL_ENT_URL}" # TODO: Remove when merging to master
   fi
 
   if [[ ${VAULT_VERSION} == *"ent"* ]]; then
     export VAULT_VERSION_STRIPPED=${VAULT_VERSION/"+ent"/}
-    export VAULT_DOWNLOAD_URL=$(AWS_SECRET_ACCESS_KEY=$(echo $AWS_SECRET_ACCESS_KEY_BINARY | base64 -d | gpg -d -) AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID_BINARY} aws s3 presign --region="us-east-1" s3://${S3BUCKET}/vault-enterprise/${VAULT_VERSION_STRIPPED}/vault-enterprise_${VAULT_VERSION_STRIPPED}_linux_amd64.zip --expires-in 3600)
+    export VAULT_ENT_URL=$(AWS_SECRET_ACCESS_KEY=$(echo $AWS_SECRET_ACCESS_KEY_BINARY | base64 -d | gpg -d -) AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID_BINARY} aws s3 presign --region="us-east-1" s3://${S3BUCKET}/vault-enterprise/${VAULT_VERSION_STRIPPED}/vault-enterprise_${VAULT_VERSION_STRIPPED}_linux_amd64.zip --expires-in 3600)
+    echo "VAULT_VERSION_STRIPPED: ${CONSUL_VERSION_STRIPPED}"
+    echo "VAULT_ENT_URL: ${CONSUL_ENT_URL}" # TODO: Remove when merging to master
   fi
 
   for PRODUCT in $*; do
@@ -79,8 +83,6 @@ build_ent () {
 }
 
 build () {
-  echo "Starting build from ${GIT_BRANCH}"
-
   if [ -z ${RELEASE_VERSION} ]; then
     # Set RELEASE_VERSION to the current git branch if not specified so it's not empty
     export RELEASE_VERSION = ${GIT_BRANCH}
@@ -90,17 +92,21 @@ build () {
     export VCS_NAME = ${USER_TRIGGER}
   fi
 
+  echo "Starting build from ${GIT_BRANCH}"
+  echo "RELEASE_VERSION: ${RELEASE_VERSION}"
+  echo "VCS_NAME: ${VCS_NAME}"
+
   if [[ ${GIT_BRANCH} == *"master"* ]]; then
-    echo "Building ${RELEASE_VERSION} image from ${GIT_BRANCH}"
+    echo "Building ${RELEASE_VERSION} images from ${GIT_BRANCH}"
     packer_build consul vault nomad hashistack
   else
     echo "FORCE_BUILD: ${FORCE_BUILD}"
 
     if ! [ -z ${FORCE_BUILD} ]; then
-      echo "Building ${RELEASE_VERSION} image from ${GIT_BRANCH}"
+      echo "Building ${RELEASE_VERSION} images from ${GIT_BRANCH}"
       packer_build consul vault nomad hashistack
     else
-      echo "Skip building ${RELEASE_VERSION} image from ${GIT_BRANCH}"
+      echo "Skip building ${RELEASE_VERSION} images from ${GIT_BRANCH}"
     fi
   fi
 
