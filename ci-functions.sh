@@ -49,11 +49,6 @@ packer_build () {
     # Replacing '+' with '-' as '+' is an invalid character for the AMI name and
     # the version isn't used during the install when 'CONSUL_ENT_URL' is populated
     export CONSUL_VERSION=${CONSUL_VERSION/'+'/'-'}
-
-     # TODO: Remove these echos when merging to master
-    echo "CONSUL_VERSION: ${CONSUL_VERSION}"
-    echo "CONSUL_VERSION_STRIPPED: ${CONSUL_VERSION_STRIPPED}"
-    echo "CONSUL_ENT_URL: ${CONSUL_ENT_URL}"
   fi
 
   if [[ ${VAULT_VERSION} == *"ent"* ]]; then
@@ -63,11 +58,6 @@ packer_build () {
     # Replacing '+' with '-' as '+' is an invalid character for the AMI name and
     # the version isn't used during the install when 'VAULT_ENT_URL' is populated
     export VAULT_VERSION=${VAULT_VERSION/'+'/'-'}
-
-     # TODO: Remove these echos when merging to master
-    echo "VAULT_VERSION: ${VAULT_VERSION}"
-    echo "VAULT_VERSION_STRIPPED: ${VAULT_VERSION_STRIPPED}"
-    echo "VAULT_ENT_URL: ${CONSUL_ENT_URL}"
   fi
 
   for PRODUCT in $*; do
@@ -93,7 +83,7 @@ packer_build () {
 
 # TODO: Remove when merging into master
 build_ent () {
-  echo "built_ent is DEPRECATED: Remove this function when merging to master"
+  echo "build_ent is DEPRECATED: Remove this function when merging to master"
 }
 
 build () {
