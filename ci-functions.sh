@@ -104,9 +104,9 @@ build () {
     echo "Building ${RELEASE_VERSION} images from ${GIT_BRANCH}"
     packer_build consul vault nomad hashistack
   else
-    echo "FORCE_BUILD: ${FORCE_BUILD}"
+    echo "RUN_BUILD: ${RUN_BUILD}"
 
-    if ! [ -z ${FORCE_BUILD} ]; then
+    if ! [ -z ${RUN_BUILD} ]; then
       echo "Building ${RELEASE_VERSION} images from ${GIT_BRANCH}"
       packer_build consul vault nomad hashistack
     else
@@ -118,6 +118,15 @@ build () {
 }
 
 publish () {
+  # Exit early if not on master branch or RUN_BUILD env var not passed
+  echo "GIT_BRANCH: ${GIT_BRANCH}"
+  echo "RUN_PUBLISH: ${RUN_PUBLISH}"
+
+  if ! [[ ${GIT_BRANCH} == *"master"* ]] && [ -z ${RUN_PUBLISH} ]; then
+    echo "Do not publish, exit early"
+    exit 0
+  fi
+
   git clone https://${GITHUB_USERNAME}:${GITHUB_TOKEN}@github.com/hashicorp-modules/image-permission-aws
   cd image-permission-aws
   /tmp/terraform init
