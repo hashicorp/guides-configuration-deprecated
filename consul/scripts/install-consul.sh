@@ -18,15 +18,21 @@ curl --silent --output /tmp/${CONSUL_ZIP} ${CONSUL_URL}
 logger "Installing consul"
 sudo unzip -o /tmp/${CONSUL_ZIP} -d /usr/local/bin/
 sudo chmod 0755 /usr/local/bin/consul
-sudo chown consul:consul /usr/local/bin/consul
-sudo mkdir -pm 0755 /etc/consul.d
-sudo mkdir -pm 0755 /opt/consul/data
-
+sudo chown ${USER}:${GROUP} /usr/local/bin/consul
 logger "/usr/local/bin/consul --version: $(/usr/local/bin/consul --version)"
 
 logger "Configuring consul ${CONSUL_VERSION}"
-sudo cp /tmp/consul/config/* /etc/consul.d/
-sudo chown -R consul:consul /etc/consul.d /opt/consul
+sudo mkdir -pm 0755 /etc/consul.d
+sudo mkdir -pm 0755 /opt/consul/data
+sudo chmod -R 0755 /opt/consul/*
+
+# Copy over all example Consul config files
+sudo cp /tmp/consul/config/* /etc/consul.d/.
+
+# Start Consul in -dev mode
+echo 'FLAGS=-dev -ui' | sudo tee /etc/consul.d/consul.conf
+
+sudo chown -R ${USER}:${GROUP} /etc/consul.d /opt/consul
 sudo chmod -R 0644 /etc/consul.d/*
 
 # Detect package management system.
@@ -36,6 +42,7 @@ APT_GET=$(which apt-get 2>/dev/null)
 if [[ ! -z ${YUM} ]]; then
   logger "Installing dnsmasq"
   sudo yum install -q -y dnsmasq
+  sudo sed -i '1i nameserver 127.0.0.1\n' /etc/resolv.conf
 elif [[ ! -z ${APT_GET} ]]; then
   logger "Installing dnsmasq"
   sudo apt-get -qq -y update
@@ -46,7 +53,7 @@ else
 fi
 
 logger "Configuring dnsmasq to forward .consul requests to consul port 8600"
-sudo sh -c 'echo "server=/consul/127.0.0.1#8600" >> /etc/dnsmasq.d/consul'
+sudo sh -c 'echo "server=/consul/127.0.0.1#8600" > /etc/dnsmasq.d/consul'
 sudo systemctl enable dnsmasq
 sudo systemctl restart dnsmasq
 
