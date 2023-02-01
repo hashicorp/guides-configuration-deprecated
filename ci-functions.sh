@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 # This script includes a set of generic CI functions to test Packer Builds.
 prepare () {
   rm -rf /tmp/packer
