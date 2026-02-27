@@ -8,9 +8,9 @@ logger() {
 
 logger "Running"
 
+GROUP="${GROUP:-}"
 USER="${USER:-}"
 COMMENT="${COMMENT:-}"
-GROUP="${GROUP:-}"
 HOME="${HOME:-}"
 
 # Detect package management system.
@@ -64,5 +64,10 @@ else
   logger "${USER} user not created due to OS detection failure"
   exit 1;
 fi
+
+# Create & set permissions on HOME directory
+sudo mkdir -pm 0755 ${HOME}
+sudo chown -R ${USER}:${GROUP} ${HOME}
+sudo chmod -R 0755 ${HOME}
 
 logger "Complete"

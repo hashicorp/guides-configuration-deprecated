@@ -3,7 +3,7 @@ This repo contains Packer templates used for modules in hashicorp-modules
 
 ---
 
-## HashiStack  
+## HashiStack
 Contains provider specific templates that installs HashiCorp software on a single node (Consul, Nomad, Vault, consul-template and envconsul).
 
 Example HashiStack build command:
@@ -77,7 +77,7 @@ Contains Consul specific installation scripts, configuration files.  Also has Pa
 Example Consul build command (AWS):
 
 ```
-AWS_REGION="us-west-1" PACKER_ENVIRONMENT="production" CONSUL_VERSION="0.9.2" packer build consul-aws.json
+AWS_REGION="us-west-1" PACKER_ENVIRONMENT="production" CONSUL_VERSION="0.9.2" packer build consul.json
 ```
 
 Example Consul build command (Azure):
@@ -88,7 +88,7 @@ AZURE_RESOURCE_GROUP="PackerImages" AZURE_LOCATION="West US" PACKER_ENVIRONMENT=
 
 ---
 
-## Nomad  
+## Nomad
 Contains Nomad specific installation scripts, configuration files.  Also has Packer templates specific to Nomad usage.
 
 
@@ -100,13 +100,13 @@ AWS_REGION="us-west-1" PACKER_ENVIRONMENT="production" NOMAD_VERSION="0.5.6" CON
 
 ---
 
-## Vault    
+## Vault
 Contains Vault specific installation scripts, configuration files.  Also has Packer templates specific to Vault usage.
 
 Example Vault (including Consul) build command:
 
 ```
-AWS_REGION="us-west-1" PACKER_ENVIRONMENT="production" VAULT_VERSION="0.7.3" CONSUL_VERSION="0.9.2" packer build vault.json
+AWS_REGION="us-west-1" PACKER_ENVIRONMENT="production" VAULT_VERSION="0.8.0" CONSUL_VERSION="0.9.2" packer build vault.json
 ```
 
 ## Continuous Integration
@@ -148,12 +148,7 @@ fi
 
 ## Hashistack Version Tables:
 
-| Nomad | Consul | Vault |
-|-------|--------|-------|
-| 0.5.6 | 0.8.4  | 0.7.3 |
-| 0.6.0 | 0.8.4  | 0.7.3 |
-| 0.6.0 | 0.8.4  | 0.8.0 |
-| 0.6.0 | 0.9.2  | 0.8.0 |
-| 0.6.0 | 0.9.2  | 0.8.1 |
-| 0.6.2 | 0.9.2  | 0.8.1 |
-| 0.6.3 | 0.9.2  | 0.8.3 |
+|  Consul   |   Vault   |   Nomad   |   Release   |
+|-----------|-----------|-----------|-------------|
+| 0.9.2     | 0.8.1     | 0.6.2     | 0.1.0-dev1  |
+| 0.9.2+ent | 0.8.1+ent | 0.6.2     | 0.1.0-dev1  |
