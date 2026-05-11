@@ -1,3 +1,5 @@
+# Copyright IBM Corp. 2017, 2026
+
 
 describe interface('eth0') do
   it { should be_up }

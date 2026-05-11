@@ -1,3 +1,5 @@
+# Copyright IBM Corp. 2017, 2026
+
 export CONSUL_VERSION="1.0.0"
 export NOMAD_VERSION="0.7.0"
 export VAULT_VERSION="0.8.3"
