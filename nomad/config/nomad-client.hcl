@@ -1,3 +1,5 @@
+# Copyright IBM Corp. 2017, 2026
+
 client {
   enabled         = true
   client_max_port = 15000
